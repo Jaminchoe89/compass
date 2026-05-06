@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compass Events – Singapore's Premier Event Management Company</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+          colors: {
+            blue:   '#5B8CF5',
+            purple: '#F97316',
+            cyan:   '#22D3EE',
+            amber:  '#F59E0B',
+            dark:   '#04040E',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --blue:   #5B8CF5;
+      --purple: #F97316;
+      --cyan:   #22D3EE;
+      --amber:  #F59E0B;
+      --dark:   #04040E;
+      --glass:  rgba(6,6,22,0.82);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background: var(--dark);
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* ── Wave canvas ── */
+    #wave-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+      object-fit: cover;
+    }
+    #wave-veil {
+      position: fixed; inset: 0;
+      z-index: -1;
+      background: rgba(4,4,14,0.52);
+      pointer-events: none;
+    }
+
+    /* ── Loader bar ── */
+    #wave-loader {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 3px; z-index: 9999;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.2s ease;
+    }
+
+    /* ── Progressive reveal gating ── */
+    .js-ready .reveal { opacity: 0; transform: translateY(32px); }
+    .js-ready .hero-word { transform: translateY(110%); }
+
+    /* ── Section tints ── */
+    .section-tinted      { background: rgba(4,4,16,0.70); }
+    .section-tinted-dark { background: rgba(3,3,12,0.82); }
+
+    /* ── Navbar ── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.5rem 0;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease;
+    }
+    #navbar.scrolled {
+      background: rgba(4,4,14,0.88);
+      backdrop-filter: blur(20px);
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(91,140,245,0.15);
+    }
+    .nav-link {
+      color: rgba(226,232,240,0.75);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+    .nav-link:hover { color: var(--cyan); }
+
+    /* ── Hero ── */
+    .hero-clip {
+      overflow: hidden;
+      display: inline-block;
+      padding-bottom: 0.18em; /* prevent descender/gradient clipping */
+      margin-bottom: -0.18em;
+    }
+    .hero-word {
+      display: inline-block;
+      padding-top: 0.05em;
+      transition: transform 0.9s cubic-bezier(.16,1,.3,1);
+    }
+
+    /* ── Gradient text ── */
+    .grad-text {
+      color: var(--purple);
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 2rem;
+      background: var(--purple);
+      color: #fff;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      transition: opacity 0.25s, transform 0.25s;
+      border: none; cursor: pointer;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 2rem;
+      background: transparent;
+      color: var(--cyan);
+      border: 1.5px solid var(--cyan);
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      transition: background 0.25s, color 0.25s, transform 0.25s;
+      cursor: pointer;
+    }
+    .btn-outline:hover {
+      background: rgba(34,211,238,0.12);
+      transform: translateY(-2px);
+    }
+
+    /* ── Vertical cards ── */
+    .vert-card {
+      background: var(--glass);
+      border: 1px solid rgba(91,140,245,0.18);
+      border-radius: 1.25rem;
+      backdrop-filter: blur(28px);
+      padding: 2rem;
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .vert-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(91,140,245,0.5);
+      box-shadow: 0 16px 48px rgba(91,140,245,0.12);
+    }
+    .vert-icon {
+      width: 52px; height: 52px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 14px;
+      background: rgba(249,115,22,0.15);
+      margin-bottom: 1.25rem;
+      font-size: 1.5rem;
+    }
+
+    /* ── Portfolio filter tabs ── */
+    .filter-tab {
+      padding: 0.5rem 1.25rem;
+      border-radius: 999px;
+      border: 1.5px solid rgba(91,140,245,0.3);
+      background: transparent;
+      color: rgba(226,232,240,0.65);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .filter-tab:hover, .filter-tab.active {
+      background: var(--purple);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    /* ── Portfolio grid cards ── */
+    .port-card {
+      background: var(--glass);
+      border: 1px solid rgba(91,140,245,0.14);
+      border-radius: 1rem;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      cursor: pointer;
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .port-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(91,140,245,0.45);
+      box-shadow: 0 20px 60px rgba(91,140,245,0.14);
+    }
+    .port-img-wrap {
+      width: 100%; aspect-ratio: 16/9;
+      overflow: hidden; position: relative;
+    }
+    .port-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .port-card:hover .port-img-wrap img { transform: scale(1.06); }
+    .port-badge {
+      position: absolute; top: 0.75rem; left: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(6,6,22,0.78);
+      border: 1px solid rgba(91,140,245,0.35);
+      color: var(--cyan);
+      backdrop-filter: blur(8px);
+    }
+
+    /* ── Lightbox ── */
+    #lightbox {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(3,3,12,0.95);
+      backdrop-filter: blur(12px);
+      display: none; flex-direction: column;
+    }
+    #lightbox.open { display: flex; }
+    #lb-img-wrap {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+      position: relative;
+    }
+    #lb-slide-track {
+      position: relative;
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
+    /* Each slide is a full-size panel; img is centred inside */
+    .lb-slide {
+      position: absolute;
+      inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      will-change: transform;
+    }
+    .lb-slide img {
+      max-width: calc(100% - 8rem); max-height: 72vh;
+      object-fit: contain;
+      border-radius: 0.75rem;
+      display: block;
+    }
+    .lb-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px;
+      background: rgba(91,140,245,0.2);
+      border: 1px solid rgba(91,140,245,0.4);
+      border-radius: 50%;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.25s;
+      font-size: 1.25rem;
+    }
+    .lb-btn:hover { background: rgba(91,140,245,0.45); }
+
+    /* ── Stats ── */
+    .stat-card {
+      background: var(--glass);
+      border: 1px solid rgba(91,140,245,0.18);
+      border-radius: 1.25rem;
+      backdrop-filter: blur(28px);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ── Team cards ── */
+    .team-card {
+      background: var(--glass);
+      border: 1px solid rgba(91,140,245,0.14);
+      border-radius: 1.25rem;
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .team-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(91,140,245,0.14);
+    }
+
+    /* ── Contact form ── */
+    .form-input {
+      width: 100%;
+      background: rgba(6,6,22,0.75);
+      border: 1.5px solid rgba(91,140,245,0.22);
+      border-radius: 0.75rem;
+      padding: 0.875rem 1.25rem;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .form-input:focus { border-color: var(--cyan); }
+    .form-input::placeholder { color: rgba(226,232,240,0.35); }
+
+    /* ── Divider gradient ── */
+    .grad-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(91,140,245,0.4), rgba(34,211,238,0.4), transparent);
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: rgba(91,140,245,0.4); border-radius: 3px; }
+
+    /* ── Mobile menu ── */
+    #mobile-menu {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(4,4,14,0.97);
+      backdrop-filter: blur(20px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+    #mobile-menu.open { display: flex; }
+
+    /* ── Section headings ── */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: #f1f5f9;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Wave loader bar -->
+<div id="wave-loader"></div>
+
+<!-- Fixed wave canvas -->
+<canvas id="wave-canvas"></canvas>
+<div id="wave-veil"></div>
+
+<!-- ══════════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <a href="#home">
+      <img src="./Compass Logo - White.png" alt="Compass Events" class="h-10 w-auto">
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#about"    class="nav-link">About</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#work"     class="nav-link">Work</a>
+      <a href="#contact"  class="nav-link">Contact</a>
+    </div>
+    <button onclick="jumpToWork()" class="hidden md:inline-flex btn-primary text-sm py-2.5 px-5">
+      Get in Touch
+    </button>
+
+    <!-- Hamburger -->
+    <button id="ham-btn" onclick="openMob()" class="md:hidden text-white p-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div id="mobile-menu">
+  <button onclick="closeMob()" class="absolute top-6 right-6 text-white">
+    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+  <a href="#about"    onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">About</a>
+  <a href="#services" onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Services</a>
+  <a href="#work"     onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Work</a>
+  <a href="#contact"  onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Contact</a>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section id="home" class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
+  <div class="max-w-5xl mx-auto">
+    <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none mb-8" style="letter-spacing:-0.04em">
+      <span class="hero-clip"><span class="hero-word text-white">Crafting&nbsp;</span></span>
+      <span class="hero-clip"><span class="hero-word text-white">Moments&nbsp;</span></span>
+      <span class="hero-clip"><span class="hero-word grad-text">That&nbsp;Matter</span></span>
+    </h1>
+
+    <p class="reveal text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed" style="font-weight:300">
+      From intimate boardroom dinners to 3,000-delegate conferences — Compass Events designs and delivers exceptional experiences across Asia Pacific.
+    </p>
+
+    <div class="reveal flex flex-wrap gap-4 justify-center">
+      <button onclick="jumpToWork()" class="btn-primary text-base px-8 py-4">
+        View Our Work
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </button>
+      <a href="#contact" class="btn-outline text-base px-8 py-4">Start a Project</a>
+    </div>
+  </div>
+
+  <!-- Scroll cue -->
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+    <span class="text-xs tracking-widest uppercase" style="color:var(--cyan)">Scroll</span>
+    <div class="w-px h-12 bg-gradient-to-b from-cyan-400 to-transparent"></div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     ABOUT
+══════════════════════════════════════════════ -->
+<section id="about" class="section-tinted-dark py-28">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div>
+        <p class="section-label reveal">Who We Are</p>
+        <h2 class="section-title reveal mb-6">Singapore's Most <span class="grad-text">Trusted</span> Events Partner</h2>
+        <p class="reveal text-slate-300 text-lg leading-relaxed mb-6" style="font-weight:300">
+          Compass Events is a Singapore-based, full-service event management company specialising in conferences, corporate events, hybrid experiences, and international productions. We combine strategic thinking with flawless execution to create events that move people and drive results.
+        </p>
+        <p class="reveal text-slate-400 leading-relaxed mb-10">
+          Our team of seasoned producers, creative directors, and logistics experts has delivered events for global financial institutions, healthcare leaders, technology companies, and government agencies — always on brief, on budget, and beyond expectations.
+        </p>
+        <a href="#contact" class="reveal btn-primary">Work With Us</a>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 reveal">
+        <div class="vert-card col-span-2">
+          <div class="flex items-center gap-4 mb-3">
+            <span class="text-3xl">🧭</span>
+            <h3 class="text-lg font-bold text-white">Our Philosophy</h3>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed">Every event is a story. We obsess over every detail — from the first attendee touchpoint to the final farewell — to ensure your story lands exactly right.</p>
+        </div>
+        <div class="vert-card">
+          <div class="text-2xl mb-3">🌏</div>
+          <h3 class="font-bold text-white mb-2">Pan-Asia Reach</h3>
+          <p class="text-slate-400 text-sm">Singapore, Bangkok, Hong Kong, Jakarta, and beyond.</p>
+        </div>
+        <div class="vert-card">
+          <div class="text-2xl mb-3">⚡</div>
+          <h3 class="font-bold text-white mb-2">End-to-End</h3>
+          <p class="text-slate-400 text-sm">Concept to completion — one team, total accountability.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SERVICES
+══════════════════════════════════════════════ -->
+<section id="services" class="section-tinted py-28">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <p class="section-label reveal">Our Expertise</p>
+      <h2 class="section-title reveal">Five Verticals. <span class="grad-text">One Standard.</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Conference Management -->
+      <div class="vert-card reveal">
+        <div class="vert-icon">🎤</div>
+        <h3 class="text-xl font-bold text-white mb-3">Conference Management</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+          Large-scale international and regional conferences, plenary sessions, breakouts, and gala dinners. We manage speakers, AV, registration, and every logistical detail so you can focus on content.
+        </p>
+        <ul class="text-slate-500 text-xs space-y-1.5">
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Venue sourcing & contracting</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Speaker management & AV production</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Delegate registration & comms</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> On-site coordination</li>
+        </ul>
+      </div>
+
+      <!-- Corporate Events -->
+      <div class="vert-card reveal">
+        <div class="vert-icon">🏢</div>
+        <h3 class="text-xl font-bold text-white mb-3">Corporate Events</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+          From intimate leadership dinners to company-wide town halls, we bring your brand and culture to life. Each event is tailored to your objectives, values, and audience.
+        </p>
+        <ul class="text-slate-500 text-xs space-y-1.5">
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Gala dinners & award ceremonies</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Leadership & incentive retreats</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Product launches & roadshows</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Team building programmes</li>
+        </ul>
+      </div>
+
+      <!-- Hybrid Events -->
+      <div class="vert-card reveal">
+        <div class="vert-icon">🌐</div>
+        <h3 class="text-xl font-bold text-white mb-3">Hybrid Events</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+          Seamlessly connect physical and virtual audiences through broadcast-quality production, interactive digital platforms, and real-time engagement tools.
+        </p>
+        <ul class="text-slate-500 text-xs space-y-1.5">
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Live-streaming & broadcast production</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Virtual platform setup & support</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Audience Q&A & polling</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Post-event content editing</li>
+        </ul>
+      </div>
+
+      <!-- Overseas Events -->
+      <div class="vert-card reveal">
+        <div class="vert-icon">✈️</div>
+        <h3 class="text-xl font-bold text-white mb-3">Overseas Events</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+          Taking your event beyond Singapore? Our regional network spans Bangkok, Hong Kong, Jakarta, Tokyo, and more. We handle cross-border logistics so nothing gets lost in translation.
+        </p>
+        <ul class="text-slate-500 text-xs space-y-1.5">
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Pan-Asia venue sourcing</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Local supplier management</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Travel & accommodation logistics</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Cultural & regulatory guidance</li>
+        </ul>
+      </div>
+
+      <!-- Exhibition Design & Build -->
+      <div class="vert-card reveal md:col-span-2 lg:col-span-1">
+        <div class="vert-icon">🏛️</div>
+        <h3 class="text-xl font-bold text-white mb-3">Exhibition Design &amp; Build</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+          Stunning booths and experiential spaces that stop attendees in their tracks. Our in-house design team crafts custom structures that express your brand with impact.
+        </p>
+        <ul class="text-slate-500 text-xs space-y-1.5">
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Custom booth design & 3D renders</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Fabrication & installation</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Interactive digital displays</li>
+          <li class="flex items-center gap-2"><span style="color:var(--cyan)">✦</span> Post-event dismantling & storage</li>
+        </ul>
+      </div>
+
+      <!-- CTA card -->
+      <div class="vert-card reveal flex flex-col justify-between" style="background:rgba(249,115,22,0.10)">
+        <div>
+          <h3 class="text-xl font-bold text-white mb-3">Ready to Create Something Exceptional?</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Tell us about your next event and we'll get back to you within 24 hours.</p>
+        </div>
+        <a href="#contact" class="btn-primary mt-6 self-start">Start the Conversation</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PORTFOLIO
+══════════════════════════════════════════════ -->
+<section id="work" class="section-tinted-dark py-28">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-12">
+      <p class="section-label reveal">Our Work</p>
+      <h2 class="section-title reveal mb-4">Events That <span class="grad-text">Inspire</span></h2>
+      <p class="reveal text-slate-400 max-w-xl mx-auto text-lg" style="font-weight:300">A selection of our most memorable productions across Asia Pacific.</p>
+    </div>
+
+    <!-- Filter tabs -->
+    <div id="filter-tabs" class="reveal flex flex-wrap justify-center gap-3 mb-12"></div>
+
+    <!-- Grid -->
+    <div id="port-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     CONTACT
+══════════════════════════════════════════════ -->
+<section id="contact" class="section-tinted-dark py-28">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-16 items-start">
+      <div>
+        <p class="section-label reveal">Get In Touch</p>
+        <h2 class="section-title reveal mb-6">Let's Create <span class="grad-text">Together</span></h2>
+        <p class="reveal text-slate-400 text-lg leading-relaxed mb-10" style="font-weight:300">
+          Whether you have a fully-formed brief or just a bold idea, we'd love to hear about it. Our team will get back to you within 24 hours.
+        </p>
+
+        <div class="space-y-6 reveal">
+          <div class="flex items-start gap-4">
+            <div class="vert-icon text-xl mt-0.5" style="min-width:52px">📍</div>
+            <div>
+              <h4 class="font-semibold text-white mb-1">Our Office</h4>
+              <p class="text-slate-400 text-sm">91 Bencoolen St, #06-04 Sunshine Plaza<br>Singapore 189652</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="vert-icon text-xl mt-0.5" style="min-width:52px">✉️</div>
+            <div>
+              <h4 class="font-semibold text-white mb-1">Email Us</h4>
+              <a href="mailto:Stefan@compass.sg" class="text-cyan-400 text-sm hover:text-cyan-300 transition-colors">Stefan@compass.sg</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="vert-icon text-xl mt-0.5" style="min-width:52px">📞</div>
+            <div>
+              <h4 class="font-semibold text-white mb-1">Call Us</h4>
+              <a href="tel:+6596809432" class="text-cyan-400 text-sm hover:text-cyan-300 transition-colors">9680 9432</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <form onsubmit="handleForm(event)" class="space-y-5">
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-sm font-medium text-slate-400 mb-2">First Name</label>
+              <input type="text" class="form-input" placeholder="Jane">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-400 mb-2">Last Name</label>
+              <input type="text" class="form-input" placeholder="Smith">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-400 mb-2">Company</label>
+            <input type="text" class="form-input" placeholder="Acme Corporation">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-400 mb-2">Email</label>
+            <input type="email" class="form-input" placeholder="jane@company.com">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-400 mb-2">Tell Us About Your Event</label>
+            <textarea rows="4" class="form-input resize-none" placeholder="Date, location, expected attendance, goals…"></textarea>
+          </div>
+          <button type="submit" class="btn-primary w-full justify-center text-base py-4">
+            Send Message
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          </button>
+        </form>
+        <div id="form-success" class="hidden mt-4 text-center text-cyan-400 font-medium">
+          ✓ Thank you! We'll be in touch within 24 hours.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="section-tinted-dark border-t border-slate-800/50 py-12">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+      <div class="sm:col-span-2 md:col-span-1">
+        <img src="./Compass Logo - White.png" alt="Compass Events" class="h-10 w-auto mb-4">
+        <p class="text-slate-500 text-sm leading-relaxed">Singapore's trusted partner for extraordinary events across Asia Pacific.</p>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-white mb-4 uppercase tracking-widest">Services</h4>
+        <ul class="space-y-2 text-sm text-slate-500">
+          <li><a href="#services" class="hover:text-cyan-400 transition-colors">Conference Management</a></li>
+          <li><a href="#services" class="hover:text-cyan-400 transition-colors">Corporate Events</a></li>
+          <li><a href="#services" class="hover:text-cyan-400 transition-colors">Hybrid Events</a></li>
+          <li><a href="#services" class="hover:text-cyan-400 transition-colors">Overseas Events</a></li>
+          <li><a href="#services" class="hover:text-cyan-400 transition-colors">Exhibition Design &amp; Build</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-white mb-4 uppercase tracking-widest">Company</h4>
+        <ul class="space-y-2 text-sm text-slate-500">
+          <li><a href="#about"   class="hover:text-cyan-400 transition-colors">About Us</a></li>
+          <li><a href="#work"    class="hover:text-cyan-400 transition-colors">Portfolio</a></li>
+          <li><a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-white mb-4 uppercase tracking-widest">Connect</h4>
+        <ul class="space-y-2 text-sm text-slate-500">
+          <li><a href="mailto:Stefan@compass.sg" class="hover:text-cyan-400 transition-colors">Stefan@compass.sg</a></li>
+          <li><a href="tel:+6596809432" class="hover:text-cyan-400 transition-colors">9680 9432</a></li>
+          <li><a href="#" class="hover:text-cyan-400 transition-colors">LinkedIn</a></li>
+          <li><a href="#" class="hover:text-cyan-400 transition-colors">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="grad-line mb-6"></div>
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-2 text-slate-600 text-xs">
+      <span>© 2025 Compass Events Pte Ltd. All rights reserved.</span>
+      <span>Crafted with precision in Singapore</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     LIGHTBOX
+══════════════════════════════════════════════ -->
+<div id="lightbox">
+  <div class="relative flex items-center justify-center px-16 py-5 border-b border-slate-800 text-center">
+    <div>
+      <h3 id="lb-title" class="font-bold text-white text-2xl mb-1"></h3>
+      <p id="lb-meta"  class="text-cyan-400 text-sm font-medium tracking-wide"></p>
+    </div>
+    <button onclick="closeLB()" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors p-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div id="lb-img-wrap" class="relative flex-1 flex items-center justify-center p-4">
+    <div id="lb-slide-track">
+      <div id="lb-slide-a" class="lb-slide"><img id="lb-img-a" src="" alt=""></div>
+      <div id="lb-slide-b" class="lb-slide"><img id="lb-img-b" src="" alt=""></div>
+    </div>
+    <button onclick="lbPrev()" class="lb-btn" style="left:1rem;z-index:10">&#8592;</button>
+    <button onclick="lbNext()" class="lb-btn" style="right:1rem;z-index:10">&#8594;</button>
+  </div>
+
+  <div id="lb-desc-area" class="px-8 pb-4 max-h-40 overflow-y-auto text-center">
+    <p id="lb-desc" class="text-slate-300 text-base leading-relaxed max-w-3xl mx-auto"></p>
+  </div>
+
+  <div id="lb-thumbs" class="flex gap-3 px-6 pb-6 overflow-x-auto justify-center"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════ -->
+<script type="module">
+import { animate, inView } from 'https://esm.sh/motion@10.18.0';
+
+/* ─────────────────────────────────────────────
+   WAVE CANVAS ANIMATION
+───────────────────────────────────────────── */
+const TOTAL  = 121;
+const canvas = document.getElementById('wave-canvas');
+const ctx    = canvas.getContext('2d');
+const loader = document.getElementById('wave-loader');
+const cache  = new Map();
+let   loaded = 0;
+let   curFrame = 0;
+
+function src(i) { return `./waves-animation-frames/frame_${String(i).padStart(4,'0')}.png`; }
+
+function loadFrame(i) {
+  if (cache.has(i)) return Promise.resolve();
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => { cache.set(i, img); loaded++; updateLoader(); res(); };
+    img.onerror = () => res();
+    img.src = src(i);
+  });
+}
+
+function updateLoader() {
+  const pct = loaded / TOTAL;
+  loader.style.transform = `scaleX(${pct})`;
+  if (pct >= 1) setTimeout(() => { loader.style.opacity = '0'; }, 600);
+}
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  drawFrame(curFrame);
+}
+
+function drawFrame(i) {
+  const img = cache.get(i);
+  if (!img) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+}
+
+function frameForScroll() {
+  const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  return Math.min(Math.floor((window.scrollY / max) * TOTAL), TOTAL - 1);
+}
+
+window.addEventListener('scroll', () => {
+  const f = frameForScroll();
+  if (f !== curFrame) { curFrame = f; drawFrame(f); }
+  // Preload ±6
+  for (let d = 1; d <= 6; d++) {
+    if (f + d < TOTAL) loadFrame(f + d);
+    if (f - d >= 0)    loadFrame(f - d);
+  }
+}, { passive: true });
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// Load first 15 frames immediately, draw frame 0 as soon as ready
+const firstBatch = [];
+for (let i = 0; i < Math.min(15, TOTAL); i++) firstBatch.push(i);
+Promise.all(firstBatch.map(loadFrame)).then(() => drawFrame(0));
+
+// Stagger-load remaining frames
+for (let i = 15; i < TOTAL; i++) {
+  setTimeout(() => loadFrame(i), (i - 15) * 25);
+}
+
+/* ─────────────────────────────────────────────
+   EVENTS DATA
+───────────────────────────────────────────── */
+const CATS = ['All','Conference Management','Corporate Events','Hybrid Events','Overseas Events','Exhibition Design & Build'];
+
+const EVENTS = [
+  // ── CONFERENCE MANAGEMENT ──
+  {
+    id:1, cat:'Conference Management',
+    title:'APAC Investment Forum 2025',
+    client:'Aberdeen Investments',
+    meta:'Marina Bay Sands · Mar 2025 · 120+ delegates',
+    desc:'A flagship annual gathering of Aberdeen\'s top APAC institutional investors. Compass Events managed the full production at Marina Bay Sands — from multi-breakout room logistics and speaker green rooms to a gala dinner and post-event content capture. The two-day forum featured keynotes, panel discussions, and one-on-one investor meetings.',
+    imgs:[
+      './1 - Conference Management/L1  - aberdeen Investments/AC_012-2.jpg',
+      './1 - Conference Management/L1  - aberdeen Investments/AC_017-2.jpg',
+      './1 - Conference Management/L1  - aberdeen Investments/AC_036-2.jpg',
+      './1 - Conference Management/L1  - aberdeen Investments/AC_050-2.jpg',
+      './1 - Conference Management/L1  - aberdeen Investments/AC_155-2.jpg',
+    ]
+  },
+  {
+    id:2, cat:'Conference Management',
+    title:'ITS Summit 2025',
+    client:'Intelligent Transport Society',
+    meta:'PARKROYAL Marina Bay · Jul 2025 · 200+ delegates',
+    desc:'The premier gathering of intelligent transport leaders across Southeast Asia. Compass Events delivered end-to-end conference management — venue liaison, delegate registration, full AV production, exhibition space coordination, and keynote speaker logistics.',
+    imgs:[
+      './1 - Conference Management/R2 - ITS Summit/ITS006-2.jpg',
+      './1 - Conference Management/R2 - ITS Summit/ITS015-2.jpg',
+      './1 - Conference Management/R2 - ITS Summit/ITS021-2.jpg',
+      './1 - Conference Management/R2 - ITS Summit/ITS024-2.jpg',
+      './1 - Conference Management/R2 - ITS Summit/ITS113-2.jpg',
+    ]
+  },
+  {
+    id:3, cat:'Conference Management',
+    title:'Asian Actuarial Conference',
+    client:'Actuarial Society of Singapore',
+    meta:'Resorts World Sentosa · Oct 2019 · 3 days',
+    desc:'A landmark 3-day international actuarial conference at Resorts World Sentosa. Compass Events orchestrated multiple parallel technical sessions, cultural networking dinners, and an international delegate experience programme welcoming professionals from over 25 countries.',
+    imgs:[
+      './1 - Conference Management/R3 - AAC/1A_004-2.jpg',
+      './1 - Conference Management/R3 - AAC/2A_121-2.jpg',
+      './1 - Conference Management/R3 - AAC/2B_030-2.jpg',
+      './1 - Conference Management/R3 - AAC/2B_032-2.jpg',
+      './1 - Conference Management/R3 - AAC/AAC RWS Ballroom - Adjusted-2.jpg',
+    ]
+  },
+  {
+    id:4, cat:'Conference Management',
+    title:'Annual Client Forum',
+    client:'MUFG',
+    meta:'Singapore · 2024 · Institutional Investors',
+    desc:'An exclusive annual client forum for MUFG\'s institutional investor community in Singapore. Compass Events managed the full event production including venue coordination, AV setup, delegate experience, and a curated networking dinner.',
+    imgs:[
+      './1 - Conference Management/R1 - MUFG/MUFG_0003-2.jpg',
+      './1 - Conference Management/R1 - MUFG/MUFG_0014-2.jpg',
+      './1 - Conference Management/R1 - MUFG/MUFG_0026-2.jpg',
+      './1 - Conference Management/R1 - MUFG/MUFG_0033-2.jpg',
+      './1 - Conference Management/R1 - MUFG/MUFG_0073-2.jpg',
+    ]
+  },
+  {
+    id:5, cat:'Conference Management',
+    title:'Annual Investor Day',
+    client:'Full Vision Capital',
+    meta:'Singapore · 2024 · Private Equity',
+    desc:'A premium investor day event for Full Vision Capital\'s portfolio of institutional investors. Compass Events delivered immaculate event styling, custom branding elements including acrylic logos and bespoke table touches, and seamless logistics throughout.',
+    imgs:[
+      './1 - Conference Management/L2 - Full Vision Capital/Block Letters - Palm Ballroom - Landscape.jpg',
+      './1 - Conference Management/L2 - Full Vision Capital/Lightbox - FVC - 3.jpg',
+      './1 - Conference Management/L2 - Full Vision Capital/Lightbox - FVC - Palm Ballroom.jpg',
+      './1 - Conference Management/L2 - Full Vision Capital/PVC Table Tag 2.jpg',
+    ]
+  },
+  {
+    id:6, cat:'Conference Management',
+    title:'Annual Convention',
+    client:'Singapore Council of Women\'s Organisations',
+    meta:'Singapore · 2024',
+    desc:'The annual convention for Singapore\'s leading women\'s advocacy organisation. Compass Events delivered full conference production — managing plenary sessions, panel discussions, delegate registration, and post-convention celebration.',
+    imgs:[
+      './1 - Conference Management/L3 - Updated - SCWO/S_ 0001 - Hero Image.jpg',
+      './1 - Conference Management/L3 - Updated - SCWO/S_ 0321.jpg',
+      './1 - Conference Management/L3 - Updated - SCWO/S_ 0351.jpg',
+      './1 - Conference Management/L3 - Updated - SCWO/S_ 0480.jpg',
+      './1 - Conference Management/L3 - Updated - SCWO/S_ 0752.jpg',
+    ]
+  },
+  // ── CORPORATE EVENTS ──
+  {
+    id:7, cat:'Corporate Events',
+    title:'License To Give Gala Dinner',
+    client:'Liberty Specialty Markets',
+    meta:'Four Seasons Hotel · Jul 2025 · Charity Gala',
+    desc:'An elegant charity gala at the Four Seasons Hotel Singapore raising funds for underprivileged communities. Compass Events delivered the full production — creative concept, table styling, entertainment programming, auction logistics, and broadcast-quality AV — all under a bespoke James Bond-inspired theme.',
+    imgs:[
+      './3 - Corporate Events/R1 - Liberty Insurance/LibertyCharityGala-001-KZ3_2819-2.jpg',
+      './3 - Corporate Events/R1 - Liberty Insurance/LibertyCharityGala-097-KZ3_3134-2.jpg',
+      './3 - Corporate Events/R1 - Liberty Insurance/LibertyCharityGala-104-KZ3_3144-2.jpg',
+      './3 - Corporate Events/R1 - Liberty Insurance/LibertyCharityGala-167-KZ3_3310-2.jpg',
+      './3 - Corporate Events/R1 - Liberty Insurance/LibertyCharityGala-246-KZ3_3500-2.jpg',
+    ]
+  },
+  {
+    id:8, cat:'Corporate Events',
+    title:'Luxury Brand Summit',
+    client:'Accor Luxury Collective',
+    meta:'Singapore · 2024 · Brand Showcase',
+    desc:'A spectacular showcase event for Accor\'s portfolio of luxury hotel brands across Asia Pacific. Compass Events crafted an immersive brand experience bringing together travel trade partners, media, and high-net-worth guests for an unforgettable evening.',
+    imgs:[
+      './3 - Corporate Events/L1 - Accor Luxury Collective/RACR005-2.jpg',
+      './3 - Corporate Events/L1 - Accor Luxury Collective/RACR019-2.jpg',
+      './3 - Corporate Events/L1 - Accor Luxury Collective/RACR023-2.jpg',
+      './3 - Corporate Events/L1 - Accor Luxury Collective/RACR029-2.jpg',
+      './3 - Corporate Events/L1 - Accor Luxury Collective/RACR112-2.jpg',
+    ]
+  },
+  {
+    id:9, cat:'Corporate Events',
+    title:'Annual Dinner & Awards',
+    client:'Vitol',
+    meta:'Singapore · 2024 · 300 pax',
+    desc:'The annual celebration for Vitol\'s Singapore trading team. Compass Events delivered a sophisticated evening — venue décor, curated dining experience, entertainment programme, and awards presentation for one of the world\'s leading energy companies.',
+    imgs:[
+      './3 - Corporate Events/L2 - Vitol Annual Dinner/VTLD&D004.jpg',
+      './3 - Corporate Events/L2 - Vitol Annual Dinner/VTLD&D023.jpg',
+      './3 - Corporate Events/L2 - Vitol Annual Dinner/VTLD&D121.jpg',
+      './3 - Corporate Events/L2 - Vitol Annual Dinner/VTLD&D155.jpg',
+      './3 - Corporate Events/L2 - Vitol Annual Dinner/VTLD&D316.jpg',
+    ]
+  },
+  {
+    id:10, cat:'Corporate Events',
+    title:'Regional Client Dinner',
+    client:'Finn Partners',
+    meta:'Singapore · 2024 · Agency Event',
+    desc:'A curated client appreciation dinner for Finn Partners\' regional leadership and key client stakeholders. Compass Events designed a warm, engaging evening format that fostered genuine connections and celebrated the agency\'s growing Asia Pacific presence.',
+    imgs:[
+      './3 - Corporate Events/L3- Finn Partners/N003-2.jpg',
+      './3 - Corporate Events/L3- Finn Partners/N011-2.jpg',
+      './3 - Corporate Events/L3- Finn Partners/N014-2.jpg',
+      './3 - Corporate Events/L3- Finn Partners/N020-2.jpg',
+      './3 - Corporate Events/L3- Finn Partners/N021-2.jpg',
+    ]
+  },
+  {
+    id:11, cat:'Corporate Events',
+    title:'Staff Appreciation Gala',
+    client:'Singapore General Hospital',
+    meta:'Singapore · 2024 · Healthcare',
+    desc:'An annual staff appreciation and awards gala for Singapore General Hospital. Compass Events created a heartfelt, celebratory evening recognising the dedication of healthcare professionals — from staging and AV to bespoke awards and entertainment.',
+    imgs:[
+      './3 - Corporate Events/R2 - SGH/SGH_004-2.jpg',
+      './3 - Corporate Events/R2 - SGH/SGH_010-2.jpg',
+      './3 - Corporate Events/R2 - SGH/SGH_031-2.jpg',
+      './3 - Corporate Events/R2 - SGH/SGH_103-2.jpg',
+      './3 - Corporate Events/R2 - SGH/SGH_119-2.jpg',
+    ]
+  },
+  // ── HYBRID EVENTS ──
+  {
+    id:12, cat:'Hybrid Events',
+    title:'LEAP Leadership Conference',
+    client:'IHH Healthcare',
+    meta:'Andaz Hotel Singapore · 2023 · 3,000+ Virtual',
+    desc:'IHH Healthcare\'s flagship leadership conference, broadcast simultaneously to over 3,000 virtual attendees worldwide. Compass Events built the full hybrid production — a broadcast studio within the venue, multi-camera live switching, real-time subtitle overlays, and an interactive virtual platform enabling digital delegates to participate in real time.',
+    imgs:[
+      './4 - Hybrid Events/L1  - IHH Leap/IHH003-2.jpg',
+      './4 - Hybrid Events/L1  - IHH Leap/IHH058-2.jpg',
+      './4 - Hybrid Events/L1  - IHH Leap/IHH076-2.jpg',
+      './4 - Hybrid Events/L1  - IHH Leap/IHH116-2.jpg',
+      './4 - Hybrid Events/L1  - IHH Leap/IHH144-2.jpg',
+    ]
+  },
+  {
+    id:13, cat:'Hybrid Events',
+    title:'Annual General Meeting',
+    client:'APTT (Asia Pacific Tele-Communications Trust)',
+    meta:'Huone Singapore · 2022 · Hybrid AGM',
+    desc:'A professionally produced hybrid Annual General Meeting for APTT, connecting physical attendees with remote shareholders. Compass Events managed broadcast-quality video feed, secure voting systems, real-time Q&A, and a polished in-room experience.',
+    imgs:[
+      './4 - Hybrid Events/L2 - APTT AGM/APTT AGM 2022 - Huone - Time Room-2-2.jpg',
+      './4 - Hybrid Events/L2 - APTT AGM/APTT AGM 2022 - Huone - Time Room-3-2.jpg',
+      './4 - Hybrid Events/L2 - APTT AGM/APTT AGM 2022 - Huone - Time Room-4.jpg',
+    ]
+  },
+  {
+    id:14, cat:'Hybrid Events',
+    title:'Asia Future Forum',
+    client:'South China Morning Post',
+    meta:'Singapore · Mar 2024 · Regional Conference',
+    desc:'A high-profile thought leadership conference by South China Morning Post connecting in-room delegates in Singapore with a regional virtual audience. Compass Events delivered full hybrid production — live broadcast, speaker management, and digital audience engagement.',
+    imgs:[
+      './4 - Hybrid Events/R1 - SCMP/29Mar_002-2.jpg',
+      './4 - Hybrid Events/R1 - SCMP/29Mar_105-2.jpg',
+      './4 - Hybrid Events/R1 - SCMP/29Mar_149-2.jpg',
+      './4 - Hybrid Events/R1 - SCMP/29Mar_227-2.jpg',
+      './4 - Hybrid Events/R1 - SCMP/30Mar_121-2.jpg',
+    ]
+  },
+  {
+    id:15, cat:'Hybrid Events',
+    title:'Annual All Hands Meeting',
+    client:'Deloitte',
+    meta:'Singapore · 2024 · Firm-wide Broadcast',
+    desc:'Deloitte\'s annual all-hands meeting connecting thousands of employees across Singapore offices with remote teams. Compass Events managed broadcast studio setup, multi-location video switching, live engagement tools, and senior leadership presentation support.',
+    imgs:[
+      './4 - Hybrid Events/R2- Deloitte All Hands/FY_005-2.jpg',
+      './4 - Hybrid Events/R2- Deloitte All Hands/FY_043-2.jpg',
+      './4 - Hybrid Events/R2- Deloitte All Hands/67C1B3EB-24B7-4452-8A64-10D39A424DFE_1_105_c.jpg',
+    ]
+  },
+  // ── OVERSEAS EVENTS ──
+  {
+    id:16, cat:'Overseas Events',
+    title:'Investment Roundtable Bangkok',
+    client:'T. Rowe Price',
+    meta:'Rosewood Bangkok · Jul 2025 · Exclusive Dinner',
+    desc:'An exclusive investment roundtable dinner at the Rosewood Bangkok for T. Rowe Price\'s most significant regional clients. Compass Events coordinated all cross-border logistics from Singapore — venue contracting, bespoke menu curation, guest transfer management, and on-the-ground production support.',
+    imgs:[
+      './5 - Overseas Events/L2  - T Rowe Price Bangkok/0017-2.jpg',
+      './5 - Overseas Events/L2  - T Rowe Price Bangkok/0023-2.jpg',
+      './5 - Overseas Events/L2  - T Rowe Price Bangkok/0036-2.jpg',
+      './5 - Overseas Events/L2  - T Rowe Price Bangkok/0244-2.jpg',
+      './5 - Overseas Events/L2  - T Rowe Price Bangkok/0321-2.jpg',
+    ]
+  },
+  {
+    id:17, cat:'Overseas Events',
+    title:'Asia Institutional Forum — Multi-City',
+    client:'Wellington Management',
+    meta:'Bangkok · KL · Hong Kong · Singapore',
+    desc:'A pan-Asia institutional investor roadshow spanning four cities. Compass Events designed a consistent, premium event experience in each location — from intimate roundtable dinners in Bangkok and Kuala Lumpur to larger forum gatherings in Hong Kong and Singapore.',
+    imgs:[
+      './5 - Overseas Events/0 - Wellington AIF - Use this for Main Grid/Bangkok 1-2.jpg',
+      './5 - Overseas Events/0 - Wellington AIF - Use this for Main Grid/Bangkok2-2.jpg',
+      './5 - Overseas Events/0 - Wellington AIF - Use this for Main Grid/Hong Kong 1-2.jpg',
+      './5 - Overseas Events/0 - Wellington AIF - Use this for Main Grid/Hong Kong 2-2.jpg',
+      './5 - Overseas Events/0 - Wellington AIF - Use this for Main Grid/Malaysia 1-2.jpg',
+      './5 - Overseas Events/0 - Wellington AIF - Use this for Main Grid/Singapore1-2.jpg',
+    ]
+  },
+  {
+    id:18, cat:'Overseas Events',
+    title:'CEO Lunch Briefing',
+    client:'Franklin Templeton',
+    meta:'Bangkok · 2024 · Intimate Format',
+    desc:'An intimate CEO lunch briefing for Franklin Templeton\'s most senior regional clients in Bangkok. Compass Events managed all cross-border logistics and on-site production, delivering a refined dining experience that facilitated high-quality investment dialogue.',
+    imgs:[
+      './5 - Overseas Events/L3 - Franklin Templeton - CEO Lunch/3W1A1174-2.jpg',
+      './5 - Overseas Events/L3 - Franklin Templeton - CEO Lunch/3W1A1181-2.jpg',
+      './5 - Overseas Events/L3 - Franklin Templeton - CEO Lunch/3W1A1232-2.jpg',
+      './5 - Overseas Events/L3 - Franklin Templeton - CEO Lunch/IMG_8868-2.jpg',
+    ]
+  },
+  {
+    id:19, cat:'Overseas Events',
+    title:'Gateway to ASEAN Forum',
+    client:'UOB',
+    meta:'Multi-Country · 2024 · Regional Roadshow',
+    desc:'UOB\'s flagship Gateway to ASEAN investor forum connecting clients with regional economic opportunities. Compass Events managed full cross-border production — venue selection, local supplier coordination, delegate management, and executive speaker preparation across multiple ASEAN markets.',
+    imgs:[
+      './5 - Overseas Events/R2 - UOB Gateway to Asean/IMG_3193.jpg',
+      './5 - Overseas Events/R2 - UOB Gateway to Asean/IMG_3200.jpg',
+      './5 - Overseas Events/R2 - UOB Gateway to Asean/IMG_3205.jpg',
+    ]
+  },
+  {
+    id:20, cat:'Overseas Events',
+    title:'Thailand Investment Symposium',
+    client:'Franklin Templeton',
+    meta:'Bangkok · 2024 · 150+ Attendees',
+    desc:'A premier investment symposium in Bangkok connecting regional investors with Franklin Templeton\'s portfolio management team. Compass Events delivered full on-the-ground production including venue staging, AV, delegate hospitality, and a curated networking reception.',
+    imgs:[
+      './5 - Overseas Events/R3 - Franklin Templeton Thailand Symposium/3W1A1401-2.jpg',
+      './5 - Overseas Events/R3 - Franklin Templeton Thailand Symposium/3W1A1476-2.jpg',
+      './5 - Overseas Events/R3 - Franklin Templeton Thailand Symposium/IMG_8921-2.jpg',
+      './5 - Overseas Events/R3 - Franklin Templeton Thailand Symposium/IMG_8934-2.jpg',
+      './5 - Overseas Events/R3 - Franklin Templeton Thailand Symposium/IMG_8966-2.jpg',
+    ]
+  },
+  {
+    id:21, cat:'Overseas Events',
+    title:'Leaders Forum Asia',
+    client:'South China Morning Post',
+    meta:'Kuala Lumpur · 2024 · Regional Summit',
+    desc:'An overseas production of South China Morning Post\'s annual Leaders Forum, held in Kuala Lumpur for Malaysia\'s business and policy elite. Compass Events handled all cross-border logistics, venue relationship management, and full AV production.',
+    imgs:[
+      './5 - Overseas Events/L1 - South China Morning Post/SCMPLM001.jpg',
+      './5 - Overseas Events/L1 - South China Morning Post/SCMPLM017.jpg',
+      './5 - Overseas Events/L1 - South China Morning Post/SCMPLM130.jpg',
+      './5 - Overseas Events/L1 - South China Morning Post/SCMPLM253 copy.jpg',
+    ]
+  },
+  // ── EXHIBITION DESIGN & BUILD ──
+  {
+    id:22, cat:'Exhibition Design & Build',
+    title:'Custom Exhibition Stand',
+    client:'Singapore Exhibitor',
+    meta:'Singapore Expo · 2025 · Custom Build',
+    desc:'A bespoke exhibition stand from initial 3D renders through to full fabrication and installation. The design features striking visual branding, strategic delegate flow, integrated digital displays, and a private meeting area — all built and struck by our in-house team.',
+    imgs:[
+      './2 - Exhibition Design and Build/L1/Image_20250827_122116_796.jpeg',
+      './2 - Exhibition Design and Build/L1/Mock Up_.jpg',
+      './2 - Exhibition Design and Build/L1/unnamed.jpg',
+    ]
+  },
+  {
+    id:23, cat:'Exhibition Design & Build',
+    title:'Trade Show Presence',
+    client:'Corporate Exhibitor',
+    meta:'Singapore · 2024 · Modular Stand',
+    desc:'A refined modular exhibition stand designed for maximum brand impact at Singapore\'s leading trade show. Clean lines, backlit graphics, and a dedicated product showcase zone — all fabricated, transported, and installed by the Compass Events team.',
+    imgs:[
+      './2 - Exhibition Design and Build/R1/IMG_2947-2.jpg',
+      './2 - Exhibition Design and Build/R1/IMG_2948-2.jpg',
+    ]
+  },
+];
+
+/* ─────────────────────────────────────────────
+   PORTFOLIO RENDER & FILTER
+───────────────────────────────────────────── */
+let activeCat = 'All';
+let lbEvent = null, lbImgIdx = 0;
+
+function renderGrid() {
+  const grid = document.getElementById('port-grid');
+  const shown = activeCat === 'All' ? EVENTS : EVENTS.filter(e => e.cat === activeCat);
+  grid.innerHTML = shown.map(ev => {
+    const img = ev.imgs[0] || '';
+    return `
+    <div class="port-card reveal" onclick="openLB(${ev.id})">
+      <div class="port-img-wrap">
+        <img src="${img}" alt="${ev.title}" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,rgba(91,140,245,0.15),rgba(249,115,22,0.12))'">
+        <span class="port-badge">${ev.cat}</span>
+      </div>
+      <div class="p-5">
+        <h3 class="font-bold text-white text-base mb-1">${ev.title}</h3>
+        <p class="text-cyan-400 text-xs font-medium mb-2">${ev.client}</p>
+        <p class="text-slate-500 text-xs">${ev.meta}</p>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Re-attach inView to new cards
+  document.querySelectorAll('#port-grid .reveal').forEach(el => {
+    inView(el, () => {
+      animate(el, { opacity: [0,1], y: [24,0] }, { duration: 0.55, easing: [0.16,1,0.3,1] });
+    }, { margin: '-60px' });
+  });
+}
+
+function renderTabs() {
+  const tabs = document.getElementById('filter-tabs');
+  tabs.innerHTML = CATS.map(c => `
+    <button class="filter-tab${c===activeCat?' active':''}" onclick="setFilter('${c.replace(/'/g,"\\'")}')">
+      ${c}
+    </button>`).join('');
+}
+
+function setFilter(cat) {
+  activeCat = cat;
+  renderTabs();
+  renderGrid();
+}
+window.setFilter = setFilter;
+
+renderTabs();
+renderGrid();
+
+/* ─────────────────────────────────────────────
+   LIGHTBOX
+───────────────────────────────────────────── */
+function openLB(id) {
+  lbEvent = EVENTS.find(e => e.id === id);
+  lbImgIdx = 0;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  refreshLB();
+}
+
+function closeLB() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbPrev() {
+  if (!lbEvent) return;
+  const dir = -1;
+  lbImgIdx = (lbImgIdx - 1 + lbEvent.imgs.length) % lbEvent.imgs.length;
+  refreshLB(dir);
+}
+
+function lbNext() {
+  if (!lbEvent) return;
+  const dir = 1;
+  lbImgIdx = (lbImgIdx + 1) % lbEvent.imgs.length;
+  refreshLB(dir);
+}
+
+function setLBImg(i) {
+  const dir = i > lbImgIdx ? 1 : -1;
+  lbImgIdx = i;
+  refreshLB(dir);
+}
+
+let lbAnimating = false;
+let lbActiveSlot = 'a';
+const SLIDE_DUR = 400;
+const SLIDE_EASE = 'cubic-bezier(0.25,1,0.5,1)';
+
+function paneOf(slot) { return document.getElementById(`lb-slide-${slot}`); }
+function imgOf(slot)  { return document.getElementById(`lb-img-${slot}`); }
+
+function snapPane(el, x, opacity) {
+  el.style.transition = 'none';
+  el.style.transform  = `translateX(${x})`;
+  el.style.opacity    = String(opacity);
+}
+
+function refreshLB(dir = 0) {
+  if (!lbEvent) return;
+  document.getElementById('lb-title').textContent = lbEvent.title;
+  document.getElementById('lb-meta').textContent  = lbEvent.meta;
+  document.getElementById('lb-desc').textContent  = lbEvent.desc;
+
+  document.getElementById('lb-thumbs').innerHTML = lbEvent.imgs.map((img, i) => `
+    <img src="${img}" onclick="setLBImg(${i})"
+      style="height:72px;width:108px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid ${i===lbImgIdx?'var(--cyan)':'transparent'};opacity:${i===lbImgIdx?'1':'0.5'};transition:all 0.25s;flex-shrink:0"
+      loading="lazy">`
+  ).join('');
+
+  const newSrc = lbEvent.imgs[lbImgIdx] || '';
+
+  // Clear any stale image callbacks
+  ['a','b'].forEach(s => { imgOf(s).onload = imgOf(s).onerror = null; });
+
+  if (dir === 0) {
+    // Opening — reset both panes, fade pane A in
+    lbActiveSlot = 'a';
+    lbAnimating  = false;
+    snapPane(paneOf('a'), '0%', 0);
+    snapPane(paneOf('b'), '0%', 0);
+    imgOf('a').src = newSrc;
+    const show = () => {
+      paneOf('a').style.transition = `opacity ${SLIDE_DUR}ms ease`;
+      paneOf('a').style.opacity    = '1';
+    };
+    if (imgOf('a').complete && imgOf('a').naturalWidth > 0) requestAnimationFrame(show);
+    else imgOf('a').onload = show;
+    return;
+  }
+
+  if (lbAnimating) return;
+  lbAnimating = true;
+
+  const cur    = lbActiveSlot;
+  const nxt    = cur === 'a' ? 'b' : 'a';
+  const curPane = paneOf(cur);
+  const nxtPane = paneOf(nxt);
+  const nxtImg  = imgOf(nxt);
+  const fromX   = dir > 0 ? '100%' : '-100%';
+  const exitX   = dir > 0 ? '-100%' : '100%';
+
+  // Snap incoming pane off-screen with no transition, then load its image
+  snapPane(nxtPane, fromX, 1);
+  nxtImg.src = newSrc;
+
+  const doSlide = () => {
+    nxtImg.onload = nxtImg.onerror = null;
+    // Double rAF: ensures browser paints the off-screen snap before starting transition
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const t = `transform ${SLIDE_DUR}ms ${SLIDE_EASE}`;
+      curPane.style.transition = t;
+      nxtPane.style.transition = t;
+      curPane.style.transform  = `translateX(${exitX})`;
+      nxtPane.style.transform  = 'translateX(0%)';
+
+      nxtPane.addEventListener('transitionend', () => {
+        snapPane(curPane, '0%', 0); // reset outgoing pane cleanly
+        lbActiveSlot = nxt;
+        lbAnimating  = false;
+      }, { once: true });
+    }));
+  };
+
+  if (nxtImg.complete && nxtImg.naturalWidth > 0) doSlide();
+  else { nxtImg.onload = doSlide; nxtImg.onerror = doSlide; }
+}
+
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLB();
+  if (e.key === 'ArrowLeft')  lbPrev();
+  if (e.key === 'ArrowRight') lbNext();
+});
+
+/* ─────────────────────────────────────────────
+   NAVBAR SCROLL EFFECT
+───────────────────────────────────────────── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ─────────────────────────────────────────────
+   HERO ANIMATIONS
+───────────────────────────────────────────── */
+document.documentElement.classList.add('js-ready');
+
+const words = document.querySelectorAll('.hero-word');
+words.forEach((w, i) => {
+  animate(w, { y: ['110%', '0%'] }, {
+    delay: 0.15 + i * 0.12,
+    duration: 0.9,
+    easing: [0.16, 1, 0.3, 1]
+  });
+});
+
+/* ─────────────────────────────────────────────
+   SCROLL REVEALS
+───────────────────────────────────────────── */
+document.querySelectorAll('.reveal').forEach(el => {
+  inView(el, () => {
+    animate(el, { opacity: [0,1], y: [32,0] }, { duration: 0.65, easing: [0.16,1,0.3,1] });
+  }, { margin: '-80px' });
+});
+
+/* ─────────────────────────────────────────────
+   MOBILE MENU
+───────────────────────────────────────────── */
+function openMob() {
+  document.getElementById('mobile-menu').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMob() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ─────────────────────────────────────────────
+   HELPERS
+───────────────────────────────────────────── */
+function jumpToWork() {
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+}
+
+function handleForm(e) {
+  e.preventDefault();
+  document.getElementById('form-success').classList.remove('hidden');
+}
+
+/* ─────────────────────────────────────────────
+   EXPOSE TO WINDOW (onclick= handlers)
+───────────────────────────────────────────── */
+Object.assign(window, { jumpToWork, openLB, closeLB, lbPrev, lbNext, setLBImg, openMob, closeMob, setFilter, handleForm });
+
+</script>
+</body>
+</html>
