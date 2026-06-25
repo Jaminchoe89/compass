@@ -379,10 +379,11 @@
 
     <!-- Desktop nav -->
     <div class="hidden md:flex items-center gap-8">
-      <a href="#about"    class="nav-link">About</a>
-      <a href="#services" class="nav-link">Services</a>
-      <a href="#work"     class="nav-link">Work</a>
-      <a href="#contact"  class="nav-link">Contact</a>
+      <a href="#about"     class="nav-link">About</a>
+      <a href="#services"  class="nav-link">Services</a>
+      <a href="#work"      class="nav-link">Work</a>
+      <a href="#showreel"  class="nav-link">Showreel</a>
+      <a href="#contact"   class="nav-link">Contact</a>
     </div>
     <button onclick="jumpToWork()" class="hidden md:inline-flex btn-primary text-sm py-2.5 px-5">
       Get in Touch
@@ -404,10 +405,11 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
     </svg>
   </button>
-  <a href="#about"    onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">About</a>
-  <a href="#services" onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Services</a>
-  <a href="#work"     onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Work</a>
-  <a href="#contact"  onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Contact</a>
+  <a href="#about"     onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">About</a>
+  <a href="#services"  onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Services</a>
+  <a href="#work"      onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Work</a>
+  <a href="#showreel"  onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Showreel</a>
+  <a href="#contact"   onclick="closeMob()" class="text-2xl font-semibold text-white hover:text-cyan-400 transition-colors">Contact</a>
 </div>
 
 <!-- ══════════════════════════════════════════════
@@ -434,11 +436,6 @@
     </div>
   </div>
 
-  <!-- Scroll cue -->
-  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-    <span class="text-xs tracking-widest uppercase" style="color:var(--cyan)">Scroll</span>
-    <div class="w-px h-12 bg-gradient-to-b from-cyan-400 to-transparent"></div>
-  </div>
 </section>
 
 
@@ -463,18 +460,15 @@
       <div class="grid grid-cols-2 gap-4 reveal">
         <div class="vert-card col-span-2">
           <div class="flex items-center gap-4 mb-3">
-            <span class="text-3xl">🧭</span>
             <h3 class="text-lg font-bold text-white">Our Philosophy</h3>
           </div>
           <p class="text-slate-400 text-sm leading-relaxed">Every event is a story. We obsess over every detail — from the first attendee touchpoint to the final farewell — to ensure your story lands exactly right.</p>
         </div>
         <div class="vert-card">
-          <div class="text-2xl mb-3">🌏</div>
           <h3 class="font-bold text-white mb-2">Pan-Asia Reach</h3>
           <p class="text-slate-400 text-sm">Singapore, Bangkok, Hong Kong, Jakarta, and beyond.</p>
         </div>
         <div class="vert-card">
-          <div class="text-2xl mb-3">⚡</div>
           <h3 class="font-bold text-white mb-2">End-to-End</h3>
           <p class="text-slate-400 text-sm">Concept to completion — one team, total accountability.</p>
         </div>
@@ -496,7 +490,6 @@
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Conference Management -->
       <div class="vert-card reveal">
-        <div class="vert-icon">🎤</div>
         <h3 class="text-xl font-bold text-white mb-3">Conference Management</h3>
         <p class="text-slate-400 text-sm leading-relaxed mb-4">
           Large-scale international and regional conferences, plenary sessions, breakouts, and gala dinners. We manage speakers, AV, registration, and every logistical detail so you can focus on content.
@@ -511,7 +504,6 @@
 
       <!-- Corporate Events -->
       <div class="vert-card reveal">
-        <div class="vert-icon">🏢</div>
         <h3 class="text-xl font-bold text-white mb-3">Corporate Events</h3>
         <p class="text-slate-400 text-sm leading-relaxed mb-4">
           From intimate leadership dinners to company-wide town halls, we bring your brand and culture to life. Each event is tailored to your objectives, values, and audience.
@@ -526,7 +518,6 @@
 
       <!-- Hybrid Events -->
       <div class="vert-card reveal">
-        <div class="vert-icon">🌐</div>
         <h3 class="text-xl font-bold text-white mb-3">Hybrid Events</h3>
         <p class="text-slate-400 text-sm leading-relaxed mb-4">
           Seamlessly connect physical and virtual audiences through broadcast-quality production, interactive digital platforms, and real-time engagement tools.
@@ -541,7 +532,6 @@
 
       <!-- Overseas Events -->
       <div class="vert-card reveal">
-        <div class="vert-icon">✈️</div>
         <h3 class="text-xl font-bold text-white mb-3">Overseas Events</h3>
         <p class="text-slate-400 text-sm leading-relaxed mb-4">
           Taking your event beyond Singapore? Our regional network spans Bangkok, Hong Kong, Jakarta, Tokyo, and more. We handle cross-border logistics so nothing gets lost in translation.
@@ -556,7 +546,6 @@
 
       <!-- Exhibition Design & Build -->
       <div class="vert-card reveal md:col-span-2 lg:col-span-1">
-        <div class="vert-icon">🏛️</div>
         <h3 class="text-xl font-bold text-white mb-3">Exhibition Design &amp; Build</h3>
         <p class="text-slate-400 text-sm leading-relaxed mb-4">
           Stunning booths and experiential spaces that stop attendees in their tracks. Our in-house design team crafts custom structures that express your brand with impact.
@@ -573,7 +562,7 @@
       <div class="vert-card reveal flex flex-col justify-between" style="background:rgba(249,115,22,0.10)">
         <div>
           <h3 class="text-xl font-bold text-white mb-3">Ready to Create Something Exceptional?</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">Tell us about your next event and we'll get back to you within 24 hours.</p>
+          <p class="text-slate-400 text-sm leading-relaxed">Tell us about your next event and we'll get back to you.</p>
         </div>
         <a href="#contact" class="btn-primary mt-6 self-start">Start the Conversation</a>
       </div>
@@ -589,7 +578,6 @@
     <div class="text-center mb-12">
       <p class="section-label reveal">Our Work</p>
       <h2 class="section-title reveal mb-4">Events That <span class="grad-text">Inspire</span></h2>
-      <p class="reveal text-slate-400 max-w-xl mx-auto text-lg" style="font-weight:300">A selection of our most memorable productions across Asia Pacific.</p>
     </div>
 
     <!-- Filter tabs -->
@@ -601,6 +589,65 @@
 </section>
 
 <!-- ══════════════════════════════════════════════
+     SHOWREEL
+══════════════════════════════════════════════ -->
+<section id="showreel" class="section-tinted py-28">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <p class="section-label reveal">Showreel</p>
+      <h2 class="section-title reveal">Our Work in <span class="grad-text">Motion</span></h2>
+    </div>
+
+    <div class="reveal" style="border-radius:1.25rem;overflow:hidden;box-shadow:0 0 80px rgba(91,140,245,0.18);border:1px solid rgba(91,140,245,0.2)">
+      <div id="showreel-wrap" style="padding:56.25% 0 0 0;position:relative;">
+        <iframe id="vimeo-player"
+          src="https://player.vimeo.com/video/1204394786?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;controls=0&amp;title=0&amp;byline=0&amp;portrait=0"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;"
+          title="Compass Show Reel">
+        </iframe>
+        <!-- Custom play/pause overlay -->
+        <div id="showreel-overlay" onclick="toggleShowreel()"
+          style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.4s;">
+          <div id="showreel-btn"
+            style="width:80px;height:80px;border-radius:50%;background:rgba(249,115,22,0.9);display:flex;align-items:center;justify-content:center;transition:transform 0.25s,box-shadow 0.25s;box-shadow:0 0 48px rgba(249,115,22,0.45)">
+            <svg width="30" height="30" fill="white" viewBox="0 0 24 24" style="margin-left:4px"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+  (function initShowreel() {
+    if (typeof Vimeo === 'undefined') { setTimeout(initShowreel, 80); return; }
+    var player  = new Vimeo.Player(document.getElementById('vimeo-player'));
+    var overlay = document.getElementById('showreel-overlay');
+    var btn     = document.getElementById('showreel-btn');
+    var wrap    = document.getElementById('showreel-wrap');
+    var playing = false;
+
+    function showOverlay() { overlay.style.opacity = '1'; overlay.style.pointerEvents = 'auto'; }
+    function hideOverlay() { overlay.style.opacity = '0'; overlay.style.pointerEvents = 'none'; }
+
+    player.on('play',  function() { playing = true;  hideOverlay(); });
+    player.on('pause', function() { playing = false; showOverlay(); });
+    player.on('ended', function() { playing = false; showOverlay(); });
+
+    wrap.addEventListener('mouseenter', function() { if (playing) { overlay.style.opacity = '0.6'; overlay.style.pointerEvents = 'auto'; } });
+    wrap.addEventListener('mouseleave', function() { if (playing) hideOverlay(); });
+
+    btn.addEventListener('mouseenter', function() { btn.style.transform = 'scale(1.1)'; btn.style.boxShadow = '0 0 64px rgba(249,115,22,0.65)'; });
+    btn.addEventListener('mouseleave', function() { btn.style.transform = 'scale(1)';   btn.style.boxShadow = '0 0 48px rgba(249,115,22,0.45)'; });
+
+    window.toggleShowreel = function() { if (playing) player.pause(); else player.play(); };
+  })();
+</script>
+
+<!-- ══════════════════════════════════════════════
      CONTACT
 ══════════════════════════════════════════════ -->
 <section id="contact" class="section-tinted-dark py-28">
@@ -610,7 +657,7 @@
         <p class="section-label reveal">Get In Touch</p>
         <h2 class="section-title reveal mb-6">Let's Create <span class="grad-text">Together</span></h2>
         <p class="reveal text-slate-400 text-lg leading-relaxed mb-10" style="font-weight:300">
-          Whether you have a fully-formed brief or just a bold idea, we'd love to hear about it. Our team will get back to you within 24 hours.
+          Whether you have a fully-formed brief or just a bold idea, we'd love to hear about it.
         </p>
 
         <div class="space-y-6 reveal">
@@ -639,36 +686,39 @@
       </div>
 
       <div class="reveal">
-        <form onsubmit="handleForm(event)" class="space-y-5">
+        <form id="contact-form" onsubmit="handleForm(event)" class="space-y-5" action="https://formspree.io/f/xpqgpzkz" method="POST">
           <div class="grid sm:grid-cols-2 gap-5">
             <div>
               <label class="block text-sm font-medium text-slate-400 mb-2">First Name</label>
-              <input type="text" class="form-input" placeholder="Jane">
+              <input type="text" name="first-name" class="form-input" placeholder="Jane">
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-400 mb-2">Last Name</label>
-              <input type="text" class="form-input" placeholder="Smith">
+              <input type="text" name="last-name" class="form-input" placeholder="Smith">
             </div>
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-400 mb-2">Company</label>
-            <input type="text" class="form-input" placeholder="Acme Corporation">
+            <input type="text" name="company" class="form-input" placeholder="Acme Corporation">
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-400 mb-2">Email</label>
-            <input type="email" class="form-input" placeholder="jane@company.com">
+            <input type="email" name="email" required class="form-input" placeholder="jane@company.com">
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-400 mb-2">Tell Us About Your Event</label>
-            <textarea rows="4" class="form-input resize-none" placeholder="Date, location, expected attendance, goals…"></textarea>
+            <textarea rows="4" name="message" class="form-input resize-none" placeholder="Date, location, expected attendance, goals…"></textarea>
           </div>
-          <button type="submit" class="btn-primary w-full justify-center text-base py-4">
+          <button id="form-submit-btn" type="submit" class="btn-primary w-full justify-center text-base py-4">
             Send Message
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
           </button>
         </form>
         <div id="form-success" class="hidden mt-4 text-center text-cyan-400 font-medium">
-          ✓ Thank you! We'll be in touch within 24 hours.
+          ✓ Thank you! We'll be in touch soon.
+        </div>
+        <div id="form-error" class="hidden mt-4 text-center text-red-400 font-medium">
+          Something went wrong. Please email us directly at <a href="mailto:Stefan@compass.sg" class="underline">Stefan@compass.sg</a>
         </div>
       </div>
     </div>
@@ -698,9 +748,10 @@
       <div>
         <h4 class="text-sm font-semibold text-white mb-4 uppercase tracking-widest">Company</h4>
         <ul class="space-y-2 text-sm text-slate-500">
-          <li><a href="#about"   class="hover:text-cyan-400 transition-colors">About Us</a></li>
-          <li><a href="#work"    class="hover:text-cyan-400 transition-colors">Portfolio</a></li>
-          <li><a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a></li>
+          <li><a href="#about"     class="hover:text-cyan-400 transition-colors">About Us</a></li>
+          <li><a href="#work"      class="hover:text-cyan-400 transition-colors">Portfolio</a></li>
+          <li><a href="#showreel"  class="hover:text-cyan-400 transition-colors">Showreel</a></li>
+          <li><a href="#contact"   class="hover:text-cyan-400 transition-colors">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -715,8 +766,7 @@
     </div>
     <div class="grad-line mb-6"></div>
     <div class="flex flex-col sm:flex-row justify-between items-center gap-2 text-slate-600 text-xs">
-      <span>© 2025 Compass Events Pte Ltd. All rights reserved.</span>
-      <span>Crafted with precision in Singapore</span>
+      <span>© 2026 Compass Events Pte Ltd. All rights reserved.</span>
     </div>
   </div>
 </footer>
@@ -917,6 +967,54 @@ const EVENTS = [
       './1 - Conference Management/L3 - Updated - SCWO/S_ 0752.jpg',
     ]
   },
+  {
+    id:27, cat:'Conference Management',
+    title:'2025 Distinction Evening',
+    client:'IBF',
+    meta:'Singapore · 2025 · Conference',
+    desc:'From venue liaison and delegate registration through to full AV production, exhibition coordination, and keynote speaker logistics — Compass Events handled every dimension of IBF\'s 2025 Distinction Evening, delivering a polished, seamless experience from first brief to final curtain.',
+    imgs:[
+      './1 - Conference Management/IBF/IBFDN016.jpg',
+      './1 - Conference Management/IBF/IBFDN109.jpg',
+      './1 - Conference Management/IBF/IBFDN425.jpg',
+      './1 - Conference Management/IBF/IBFDN488.jpg',
+      './1 - Conference Management/IBF/IBFDNB009.jpg',
+      './1 - Conference Management/IBF/IBFDNB037.jpg',
+      './1 - Conference Management/IBF/IBFDNB165.jpg',
+    ]
+  },
+  {
+    id:26, cat:'Conference Management',
+    title:'Fincrime 2025',
+    client:'Deloitte',
+    meta:'Singapore · 2025 · Conference',
+    desc:'Compass Events took ownership of the full conference experience for Deloitte\'s Fincrime 2025 — coordinating venue logistics, managing delegate registration, overseeing AV and stage production, aligning exhibition space partners, and ensuring seamless keynote speaker management from brief to delivery.',
+    imgs:[
+      './1 - Conference Management/Deloitte/DLT003.jpg',
+      './1 - Conference Management/Deloitte/DLT012.jpg',
+      './1 - Conference Management/Deloitte/DLT053.jpg',
+      './1 - Conference Management/Deloitte/DLT161.jpg',
+    ]
+  },
+  {
+    id:25, cat:'Conference Management',
+    title:'Group AGM',
+    client:'CBC Group',
+    meta:'Singapore · 2025 · Multi Venue · 2 Days',
+    desc:'Compass Events managed the full lifecycle of CBC Group\'s pre-AGM welcome dinner — from creative concept and event design through delegate registration, venue dressing, and on-the-night execution. The evening set the tone for the Annual General Meeting, bringing together shareholders and leadership in a refined, hosted environment that balanced warmth with corporate gravitas.',
+    imgs:[
+      './1 - Conference Management/CBC Group/CBCAGMD2031.jpg',
+      './1 - Conference Management/CBC Group/CBCAGMD2059.jpg',
+      './1 - Conference Management/CBC Group/CBCAGMD2127.jpg',
+      './1 - Conference Management/CBC Group/CBCAGMD2710.jpg',
+      './1 - Conference Management/CBC Group/CBCAGMD2913.jpg',
+      './1 - Conference Management/CBC Group/Enscape_2026-01-28-11-25-47_Perspective 2.png',
+      './1 - Conference Management/CBC Group/CBCAGMD1002.jpg',
+      './1 - Conference Management/CBC Group/CBCAGMD1004.jpg',
+      './1 - Conference Management/CBC Group/CBCAGMD1094.jpg',
+      './1 - Conference Management/CBC Group/CBCAGMD1190.jpg',
+    ]
+  },
   // ── CORPORATE EVENTS ──
   {
     id:7, cat:'Corporate Events',
@@ -990,6 +1088,20 @@ const EVENTS = [
   },
   // ── HYBRID EVENTS ──
   {
+    id:28, cat:'Hybrid Events',
+    title:'D.N.A. Awards',
+    client:'IHH Healthcare',
+    meta:'Singapore · 2025 · Multi-Location Live Event',
+    desc:'Compass Events produced the IHH D.N.A. Awards as a fully live, multi-location broadcast — connecting teams and audiences across different sites and time zones in real time. From broadcast engineering and multi-camera switching to live presenter coordination and simultaneous feeds across locations, every element was synchronised to deliver a singular, unified experience regardless of where people were watching.',
+    imgs:[
+      './1 - Conference Management/IHH/N003.jpg',
+      './1 - Conference Management/IHH/N023.jpg',
+      './1 - Conference Management/IHH/N039.jpg',
+      './1 - Conference Management/IHH/N051.jpg',
+      './1 - Conference Management/IHH/N054.jpg',
+    ]
+  },
+  {
     id:12, cat:'Hybrid Events',
     title:'LEAP Leadership Conference',
     client:'IHH Healthcare',
@@ -1058,7 +1170,7 @@ const EVENTS = [
   },
   {
     id:17, cat:'Overseas Events',
-    title:'Asia Institutional Forum — Multi-City',
+    title:'Asian Investment Forum',
     client:'Wellington Management',
     meta:'Bangkok · KL · Hong Kong · Singapore',
     desc:'A pan-Asia institutional investor roadshow spanning four cities. Compass Events designed a consistent, premium event experience in each location — from intimate roundtable dinners in Bangkok and Kuala Lumpur to larger forum gatherings in Hong Kong and Singapore.',
@@ -1073,7 +1185,7 @@ const EVENTS = [
   },
   {
     id:18, cat:'Overseas Events',
-    title:'CEO Lunch Briefing',
+    title:'CEO Luncheon',
     client:'Franklin Templeton',
     meta:'Bangkok · 2024 · Intimate Format',
     desc:'An intimate CEO lunch briefing for Franklin Templeton\'s most senior regional clients in Bangkok. Compass Events managed all cross-border logistics and on-site production, delivering a refined dining experience that facilitated high-quality investment dialogue.',
@@ -1089,7 +1201,7 @@ const EVENTS = [
     title:'Gateway to ASEAN Forum',
     client:'UOB',
     meta:'Multi-Country · 2024 · Regional Roadshow',
-    desc:'UOB\'s flagship Gateway to ASEAN investor forum connecting clients with regional economic opportunities. Compass Events managed full cross-border production — venue selection, local supplier coordination, delegate management, and executive speaker preparation across multiple ASEAN markets.',
+    desc:'UOB\'s flagship Gateway to ASEAN investor forum connecting clients with regional economic opportunities. Compass Events managed local supplier coordination, live translation coordination, and executive speaker preparation across multiple ASEAN markets.',
     imgs:[
       './5 - Overseas Events/R2 - UOB Gateway to Asean/IMG_3193.jpg',
       './5 - Overseas Events/R2 - UOB Gateway to Asean/IMG_3200.jpg',
@@ -1125,10 +1237,24 @@ const EVENTS = [
   },
   // ── EXHIBITION DESIGN & BUILD ──
   {
-    id:22, cat:'Exhibition Design & Build',
-    title:'Custom Exhibition Stand',
-    client:'Singapore Exhibitor',
+    id:24, cat:'Exhibition Design & Build',
+    title:'Govware 2025',
+    client:'Trade Show Exhibitor',
     meta:'Singapore Expo · 2025 · Custom Build',
+    desc:'Compass Events designed and built a striking custom exhibition stand for Govware 2025 at Singapore Expo. From concept renders to full fabrication and on-site installation, the stand featured bold brand graphics, integrated digital displays, and a dedicated product showcase area.',
+    imgs:[
+      './2 - Exhibition Design and Build/Govware 2025/photo_2026-06-25_13-10-12.jpg',
+      './2 - Exhibition Design and Build/Govware 2025/photo_2026-06-25_13-10-52.jpg',
+      './2 - Exhibition Design and Build/Govware 2025/photo_2026-06-25_13-11-20.jpg',
+      './2 - Exhibition Design and Build/Govware 2025/photo_2026-06-25_13-11-47.jpg',
+      './2 - Exhibition Design and Build/Govware 2025/Enscape_2026-06-25-13-13-46_Enscape named view 1.png',
+    ]
+  },
+  {
+    id:22, cat:'Exhibition Design & Build',
+    title:'Govware 2024',
+    client:'Trade Show Exhibitor',
+    meta:'Singapore Expo · 2024 · Custom Build',
     desc:'A bespoke exhibition stand from initial 3D renders through to full fabrication and installation. The design features striking visual branding, strategic delegate flow, integrated digital displays, and a private meeting area — all built and struck by our in-house team.',
     imgs:[
       './2 - Exhibition Design and Build/L1/Image_20250827_122116_796.jpeg',
@@ -1138,9 +1264,9 @@ const EVENTS = [
   },
   {
     id:23, cat:'Exhibition Design & Build',
-    title:'Trade Show Presence',
-    client:'Corporate Exhibitor',
-    meta:'Singapore · 2024 · Modular Stand',
+    title:'Govware 2023',
+    client:'Trade Show Exhibitor',
+    meta:'Singapore Expo · 2023 · Custom Build',
     desc:'A refined modular exhibition stand designed for maximum brand impact at Singapore\'s leading trade show. Clean lines, backlit graphics, and a dedicated product showcase zone — all fabricated, transported, and installed by the Compass Events team.',
     imgs:[
       './2 - Exhibition Design and Build/R1/IMG_2947-2.jpg',
@@ -1378,9 +1504,29 @@ function jumpToWork() {
   document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
 }
 
-function handleForm(e) {
+async function handleForm(e) {
   e.preventDefault();
-  document.getElementById('form-success').classList.remove('hidden');
+  const form = document.getElementById('contact-form');
+  const btn  = document.getElementById('form-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('https://formspree.io/f/xpqgpzkz', {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      form.classList.add('hidden');
+      document.getElementById('form-success').classList.remove('hidden');
+    } else {
+      throw new Error('non-ok response');
+    }
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'Send Message';
+    document.getElementById('form-error').classList.remove('hidden');
+  }
 }
 
 /* ─────────────────────────────────────────────
